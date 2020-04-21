@@ -74,7 +74,7 @@ get_power_state_all <- function(parent_dir, id_position, match_string = "power_s
 }
 
 # match_string defaults to "power_state/.*csv"
-power_df <- get_power_state(parent_dir = "/Users/colinbosma/Dropbox/github/beiwe-preprocessing/data", id_position = 8)
+power_df <- get_power_state_all(parent_dir = "/Users/colinbosma/Dropbox/github/beiwe-preprocessing/data", id_position = 8)
 
 head(power_df) 
 

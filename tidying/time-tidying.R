@@ -3,6 +3,7 @@
 ## Libraries
 library(lubridate)
 library(tidyverse)
+library(dplr)
 
 ## RESOURCES
 ## -----------------------------------------------------------------------------
