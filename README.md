@@ -4,7 +4,11 @@
 
 
 # Table of Contents
-
+   * [Usage](#usage)
+   * [Processing](#processing)
+      * [Power State](#power-state)
+   * [Tidying](#tidying)
+      * [Time](#time)
 
 # Usage
 
