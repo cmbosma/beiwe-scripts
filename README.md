@@ -12,7 +12,7 @@
 
 # Usage
 
-The processing scripts are working from raw beiwe data downloaded using the beiwe research platform download API. The data structure is assumed to be the following: data/BeiweID-folders/data-type-folders/.csv
+The processing scripts are working from raw beiwe data downloaded using the beiwe research platform download API. The data file path structure is assumed to be the following: data/BeiweID-folders/data-type-folders/.csv
 
 The R scripts are written under the assumption that your workflow implements the `here` R package for handling your relative paths in your project. You can, however, use the scripts with your full file path.
 
