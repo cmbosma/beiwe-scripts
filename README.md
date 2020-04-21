@@ -4,8 +4,6 @@
 
 
 # Table of Contents
-   * [Introduction](#introduction)
-   * [Table of Contents](#table-of-contents)
    * [Usage](#usage)
    * [Processing](#processing)
       * [Power State](#power-state)
