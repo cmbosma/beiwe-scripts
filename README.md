@@ -117,9 +117,10 @@ df <- df %>%
   separate("UTC time", c("date", "time"), sep = " ")
 ```
 
-Convert `timestamp` to UTC date-time variable. 
+Convert `timestamp` to UTC date-time variable.
 ```R
 df <- df %>%
-  mutate(timestamp = timestamp/1000) %>% # divide by 1000 so that the as_datetime() can convert the timestamp variable
+  # divide by 1000 so that the as_datetime() can convert the timestamp variable
+  mutate(timestamp = timestamp/1000) %>%
   mutate(timestamp_dt = as_datetime(timestamp, tz = "UTC"))
 ```
