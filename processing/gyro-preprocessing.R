@@ -1,3 +1,6 @@
+## Beiwe Gyro Preprocessing
+## Colin Bosma
+
 ## Beiwe Accelerometer Preprocessing
 ## Colin Bosma
 
@@ -5,15 +8,17 @@
 ## PACKAGES
 ## -----------------------------------------------------------------------------
 
-library(tidyverse)
+
 library(here)
+library(tidyverse)
+
 
 ## Compiling data for one participant at a time:
 ## --------------------------------------------
 
 # Using a here() and piping approach.
 here()
-filefolder <- here("beiwe-data", "biewe_id", "accelerometer")
+filefolder <- here("beiwe-data", "abcdefjh", "gyro")
 files <- dir(filefolder, pattern = "*.csv", full.names = TRUE); files
 df <- files %>%
   map(read_csv) %>%
@@ -21,24 +26,24 @@ df <- files %>%
 View(df)
 
 # But can we make it into a function that does not depend on piping
-get_accelerometer <- function(accelerometer_filefolder) {
+get_gyro <- function(gyro_filefolder) {
   files = dir(filefolder, pattern = "*.csv", full.names = TRUE)
   temp_df = map(files, read_csv)
   df = reduce(temp_df, rbind)
 }
 
 # Let's test that function
-df <- get_accelerometer(here("beiwe-data", "beiwe_id", "accelerometer"))
+df <- get_gyro(here("beiwe-data", "abcdefjh", "gyro"))
 View(df)
 
 
-## Function for preprocessing all accelerometer data for all participants in a data folder:
+## Function for preprocessing all gyro data for all participants in a data folder:
 ## ---------------------------------------------------------------------------------------
 
-get_accelerometer_all <- function(parent_dir, id_position, match_string = "accelerometer/.*csv"){
+get_gyro_all <- function(parent_dir, id_position, match_string = "gryo/.*csv"){
 
   #recursively search ALL directories for files,
-  #only return relative path of files that match "accelerometer/<stuff>csv"
+  #only return relative path of files that match "gyro/<stuff>csv"
   all_files <- list.files(parent_dir, recursive = T, full.names = TRUE)[grep(pattern = match_string, list.files(parent_dir, recursive = T))]
 
   #returns data frame of ALL files in the all_files vector.
@@ -51,6 +56,7 @@ get_accelerometer_all <- function(parent_dir, id_position, match_string = "accel
     })
 }
 
-# match_string defaults to "accelerometer/.*csv"
-accelerometer_df <- get_accelerometer_all(parent_dir = "/Users/user/beiwe-data", id_position = 3)
-head(accelerometer_df)
+# match_string defaults to "gyro/.*csv"
+gyro_df <- get_gyro_all(parent_dir = "/Users/user/beiwe-data", id_position = 3)
+
+head(gyro_df)
