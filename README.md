@@ -7,6 +7,7 @@
    * [Usage](#usage)
    * [Processing](#processing)
       * [Power State](#power-state)
+      * [Accelerometer](#accelerometer)
    * [Tidying](#tidying)
       * [Time](#time)
 
@@ -69,6 +70,53 @@ get_power_state_all <- function(parent_dir, id_position, match_string = "power_s
 ```R
 df <- get_power_state_all(parent_dir = "<path-to-data-folder>", id_position = 2)
 ```
+
+## Accelerometer
+
+**Packages**
+
+```R
+library(here)
+library(tidyverse)
+```
+
+The `get_accelerometer` function combines all of the accelerometer data for one individual into one data frame. The `accelerometer_filefolder` argument should be the path to the folder containing the accelerometer data files. Either enter the directory in quotes or use a here() approach (see example).
+
+```R
+get_accelerometer <- function(accelerometer_filefolder) {
+  files = dir(filefolder, pattern = "*.csv", full.names = TRUE)
+  temp_df = map(files, read_csv)
+  df = reduce(temp_df, rbind)
+}
+```
+
+**Example usage**
+```R
+df <- get_accelerometer(here("beiwe-data", "beiwe_id", "accelerometer"))
+head(df)
+```
+The `get_accelerometer_all` function combines all power state data for every individual in a data folder. It also creates a Beiwe ID column. The directory for the `parent_dir` argument the parent directory should be assigned as the data folder holding all of the individual data folders. However, the `id_position` argument allows you enter where in your file path to direct the function to get the Beiwe IDs from the names of the individual data folders. The `id_position` argument should equal the level of the parent folder of the individual data folders. For example, a file path such as `Users/projects/data/<beiwe-data-folders>`, the `id_position` argument should equal 3.
+
+```R
+get_accelerometer_all <- function(parent_dir, id_position, match_string = "accelerometer/.*csv"){
+
+  #recursively search ALL directories for files,
+  #only return relative path of files that match "accelerometer/<stuff>csv"
+  all_files <- list.files(parent_dir, recursive = T, full.names = TRUE)[grep(pattern = match_string, list.files(parent_dir, recursive = T))]
+
+  #returns data frame of ALL files in the all_files vector.
+  #does data time split
+  #adds beiweID as new column extracted from the input file.
+  all_files %>%
+    map_df(~{
+      read_delim(.x, delim = ",")  %>%
+        mutate(beiweID = str_split(.x, pattern = "/", simplify = TRUE)[id_position]) # id_position = level of directory with BeiweID
+    })
+}
+
+# match_string defaults to "accelerometer/.*csv"
+power_df <- get_power_state(parent_dir = "/Users/user/beiwe-data", id_position = 3)
+head(power_df)
 
 # Tidying
 
