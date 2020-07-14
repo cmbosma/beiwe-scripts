@@ -17,6 +17,10 @@ browseURL("https://stat.ethz.ch/R-manual/R-devel/library/base/html/as.POSIXlt.ht
 # List valid time zone names
 OlsonNames() 
 
+## SETTING WORKSPACE
+
+here::here()
+
 ## TIME TIDYING BEIWE DATA
 ## -----------------------------------------------------------------------------
 
