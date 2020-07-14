@@ -73,7 +73,6 @@ df <- get_power_state_all(parent_dir = "<path-to-data-folder>", id_position = 2)
 
 ## Accelerometer
 
-<<<<<<< HEAD
 **Packages**
 
 ```R
@@ -114,13 +113,15 @@ get_accelerometer_all <- function(parent_dir, id_position, match_string = "accel
         mutate(beiweID = str_split(.x, pattern = "/", simplify = TRUE)[id_position]) # id_position = level of directory with BeiweID
     })
 }
+```
 
+**Example Usage**
+```R
 # match_string defaults to "accelerometer/.*csv"
 power_df <- get_power_state(parent_dir = "/Users/user/beiwe-data", id_position = 3)
 head(power_df)
+```
 
-=======
->>>>>>> d4ba34e38338decfdaae24a4a4c5ec2d2527231c
 # Tidying
 
 ## Time
