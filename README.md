@@ -251,9 +251,11 @@ get_survey <- function(surveyID_filefolder) {
 }
 ```
 
-If you have multiple surveys that are being deployed, then you will want to combine them using `reduce(c(<data_frames>), rbind)`. Next, make sure the data is in chronological order. Below is a code snippet to accomplish just that.
+If you have multiple surveys that are being deployed, then you will want to combine them using `dplyr::bind_rows(df1, df2, ...))`. Next, make sure the data is in chronological order. Below is a code snippet to accomplish just that.
 
 ```R
+dplyr::bind_rows(df1, df2, df3, ...)
+
 df <- df %>%
   group_by(`survey id`) %>%
   arrange(`UTC time`)
