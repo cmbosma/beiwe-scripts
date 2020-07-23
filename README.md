@@ -371,8 +371,8 @@ df <- df %>%
 Surveys deployed by the Beiwe research platform are going to be unique to the user. This section provides some tidying approaches that can be generally applied to Beiwe survey data.
 
 Using the Beiwe Research Platform single-server deployment API, iOS devices and Android devices provide survey output in slightly different formats.
-- iOS devices: For text-entry data, there is a new row for each change in character, creating many rows for one answer on a survey. Luckily, there is an `event` column to help use remove the extra entries.
-- Android devices: For text-entry data, there are sometimes duplicate entries. Duplicate rows are typically easy to tidy up (e.g., dplyr::distict()). However, these are unique cases due to the time stamps. Also, a participant my provide the same answer at a later time and date, so we can't remove duplicates solely using the `answer` vector.
+- **iOS devices**: For text-entry data, there is a new row for each change in character, creating many rows for one answer on a survey. Luckily, there is an `event` column to help use remove the extra entries.
+- **Android devices**: For text-entry data, there are sometimes duplicate entries. Duplicate rows are typically easy to tidy up (e.g., dplyr::distict()). However, these are unique cases due to the time stamps. Also, a participant my provide the same answer at a later time and date, so we can't remove duplicates solely using the `answer` vector.
 
 Below are tidying work flows to address these two problems.
 
