@@ -99,7 +99,9 @@ get_accelerometer <- function(accelerometer_filefolder) {
 df <- get_accelerometer(here("beiwe-data", "beiwe_id", "accelerometer"))
 head(df)
 ```
-The `get_accelerometer_all` function combines all power state data for every individual in a data folder. It also creates a Beiwe ID column. The directory for the `parent_dir` argument the parent directory should be assigned as the data folder holding all of the individual data folders. However, the `id_position` argument allows you enter where in your file path to direct the function to get the Beiwe IDs from the names of the individual data folders. The `id_position` argument should equal the level of the parent folder of the individual data folders. For example, a file path such as `Users/projects/beiwe-data/<beiwe-data-folders>`, the `id_position` argument should equal 5.
+The `get_accelerometer_all` function combines all power state data for every individual in a data folder. It also creates a Beiwe ID column. The directory for the `parent_dir` argument the parent directory should be assigned as the data folder holding all of the individual data folders. However, the `id_position` argument allows you enter where in your file path to direct the function to get the Beiwe IDs from the names of the individual data folders. The `id_position` argument should equal the level of the parent folder of the individual data folders. For example, a file path such as `Users/projects/beiwe-data/<beiwe-data-folders>`, the `id_position` argument should equal 5. 
+
+Note that this function converts the `accuracy` vector to a character type. If you have one participant with `unknown` recorded as values, then read_delim() will read in that variable as a character type, which cannot be combined with integer type. This will make the data type uniform to combine all rows. If accuracy is needed, it is recommended `unknown` entries be replaced with NAs, then to change the data type.  
 
 ```R
 get_accelerometer_all <- function(parent_dir, id_position, match_string = "accelerometer/.*csv"){
@@ -114,7 +116,8 @@ get_accelerometer_all <- function(parent_dir, id_position, match_string = "accel
   all_files %>%
     map_df(~{
       read_delim(.x, delim = ",")  %>%
-        mutate(beiweID = str_split(.x, pattern = "/", simplify = TRUE)[id_position]) # id_position = level of directory with BeiweID
+        mutate(accuracy = as.character(accuracy) %>% # Change accuracy to character type for all files.  
+          mutate(beiweID = str_split(.x, pattern = "/", simplify = TRUE)[id_position]) # id_position = level of directory with BeiweID
     })
 }
 ```
