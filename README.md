@@ -278,6 +278,8 @@ View(df)
 
 The `get_surveys_all` function combines all survey data for every individual in a data folder. It also creates a Beiwe ID column and orders the data by time according to Beiwe ID and survey ID. The directory for the `parent_dir` argument the parent directory should be assigned as the data folder holding all of the individual data folders. However, the `id_position` argument allows you enter where in your file path to direct the function to get the Beiwe IDs from the names of the individual data folders. The `id_position` argument should equal the level of the parent folder of the individual data folders. For example, a file path such as `Users/projects/beiwe-data/<beiwe-data-folders>`, the `id_position` argument should equal 5.
 
+Note that this function converts the `answer` vector to a character type. This will make the data type uniform to combine all rows. This means that after the survey data is further processed (e.g., pulling certain surveys out or converting to wide format), you will need to change the data type accordingly.   
+
 ```R
 # Notes:
   # The last two lines rearrange the data to be sequential via `UTC time` by participant and survey ID.
@@ -295,10 +297,12 @@ get_surveys_all <- function(parent_dir, id_position, match_string = "survey_timi
   all_files %>%
     map_df(~{
       read_delim(.x, delim = ",")  %>%
+        mutate(answers = as.character(answers) %>%
         mutate(beiweID = str_split(.x, pattern = "/", simplify = TRUE)[id_position]) # id_position = level of directory with BeiweID
     })  %>%
     group_by(beiweID, `survey id`) %>% # group by Beiwe ID and survey ID
-    arrange(`UTC time`) # arranges data by time for each participant
+    arrange(`UTC time`) %>% # arranges data by time for each participant
+    arrange(beiweID)
 }
 ```
 
