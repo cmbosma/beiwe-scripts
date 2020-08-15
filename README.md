@@ -155,7 +155,7 @@ head(df)
 The `get_gyro_all` function combines all power state data for every individual in a data folder. It also creates a Beiwe ID column. The directory for the `parent_dir` argument the parent directory should be assigned as the data folder holding all of the individual data folders. However, the `id_position` argument allows you enter where in your file path to direct the function to get the Beiwe IDs from the names of the individual data folders. The `id_position` argument should equal the level of the parent folder of the individual data folders. For example, a file path such as `Users/projects/beiwe-data/<beiwe-data-folders>`, the `id_position` argument should equal 5.
 
 ```R
-get_gyro_all <- function(parent_dir, id_position, match_string = "gryo/.*csv"){
+get_gyro_all <- function(parent_dir, id_position, match_string = "gyro/.*csv"){
 
   #recursively search ALL directories for files,
   #only return relative path of files that match "gyro/<stuff>csv"
