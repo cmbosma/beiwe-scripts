@@ -47,7 +47,8 @@ get_accelerometer_all <- function(parent_dir, id_position, match_string = "accel
   all_files %>%
     map_df(~{
       read_delim(.x, delim = ",")  %>%
-        mutate(beiweID = str_split(.x, pattern = "/", simplify = TRUE)[id_position]) # id_position = level of directory with BeiweID
+        mutate(accuracy = as.character(accuracy)) %>% # change accuracy to character type to keep consistent to combine. 
+          mutate(beiweID = str_split(.x, pattern = "/", simplify = TRUE)[id_position]) # id_position = level of directory with BeiweID
     })
 }
 
