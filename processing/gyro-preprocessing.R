@@ -35,7 +35,7 @@ View(df)
 ## Function for preprocessing all gyro data for all participants in a data folder:
 ## ---------------------------------------------------------------------------------------
 
-get_gyro_all <- function(parent_dir, id_position, match_string = "gryo/.*csv"){
+get_gyro_all <- function(parent_dir, id_position, match_string = "gyro/.*csv"){
 
   #recursively search ALL directories for files,
   #only return relative path of files that match "gyro/<stuff>csv"
