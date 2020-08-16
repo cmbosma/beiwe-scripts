@@ -67,10 +67,12 @@ get_surveys_all <- function(parent_dir, id_position, match_string = "survey_timi
   all_files %>%
     map_df(~{
       read_delim(.x, delim = ",")  %>%
+        mutate(answer = as.character(answer) %>%
         mutate(beiweID = str_split(.x, pattern = "/", simplify = TRUE)[id_position]) # id_position = level of directory with BeiweID
     })  %>%
     group_by(beiweID, `survey id`) %>% # group by Beiwe ID and survey ID
-    arrange(`UTC time`) # arranges data by time for each participant
+    arrange(`UTC time`) %>% # arranges data by time for each participant
+    arrange(beiweID) # Then arrange by beiweID again
 }
 
 # match_string defaults to "gps/.*csv"

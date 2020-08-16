@@ -99,7 +99,9 @@ get_accelerometer <- function(accelerometer_filefolder) {
 df <- get_accelerometer(here("beiwe-data", "beiwe_id", "accelerometer"))
 head(df)
 ```
-The `get_accelerometer_all` function combines all power state data for every individual in a data folder. It also creates a Beiwe ID column. The directory for the `parent_dir` argument the parent directory should be assigned as the data folder holding all of the individual data folders. However, the `id_position` argument allows you enter where in your file path to direct the function to get the Beiwe IDs from the names of the individual data folders. The `id_position` argument should equal the level of the parent folder of the individual data folders. For example, a file path such as `Users/projects/beiwe-data/<beiwe-data-folders>`, the `id_position` argument should equal 5.
+The `get_accelerometer_all` function combines all power state data for every individual in a data folder. It also creates a Beiwe ID column. The directory for the `parent_dir` argument the parent directory should be assigned as the data folder holding all of the individual data folders. However, the `id_position` argument allows you enter where in your file path to direct the function to get the Beiwe IDs from the names of the individual data folders. The `id_position` argument should equal the level of the parent folder of the individual data folders. For example, a file path such as `Users/projects/beiwe-data/<beiwe-data-folders>`, the `id_position` argument should equal 5. 
+
+Note that this function converts the `accuracy` vector to a character type. If you have one participant with `unknown` recorded as values, then read_delim() will read in that variable as a character type, which cannot be combined with integer type. This will make the data type uniform to combine all rows. If accuracy is needed, it is recommended `unknown` entries be replaced with NAs, then to change the data type.  
 
 ```R
 get_accelerometer_all <- function(parent_dir, id_position, match_string = "accelerometer/.*csv"){
@@ -114,7 +116,8 @@ get_accelerometer_all <- function(parent_dir, id_position, match_string = "accel
   all_files %>%
     map_df(~{
       read_delim(.x, delim = ",")  %>%
-        mutate(beiweID = str_split(.x, pattern = "/", simplify = TRUE)[id_position]) # id_position = level of directory with BeiweID
+        mutate(accuracy = as.character(accuracy) %>% # Change accuracy to character type for all files.  
+          mutate(beiweID = str_split(.x, pattern = "/", simplify = TRUE)[id_position]) # id_position = level of directory with BeiweID
     })
 }
 ```
@@ -152,7 +155,7 @@ head(df)
 The `get_gyro_all` function combines all power state data for every individual in a data folder. It also creates a Beiwe ID column. The directory for the `parent_dir` argument the parent directory should be assigned as the data folder holding all of the individual data folders. However, the `id_position` argument allows you enter where in your file path to direct the function to get the Beiwe IDs from the names of the individual data folders. The `id_position` argument should equal the level of the parent folder of the individual data folders. For example, a file path such as `Users/projects/beiwe-data/<beiwe-data-folders>`, the `id_position` argument should equal 5.
 
 ```R
-get_gyro_all <- function(parent_dir, id_position, match_string = "gryo/.*csv"){
+get_gyro_all <- function(parent_dir, id_position, match_string = "gyro/.*csv"){
 
   #recursively search ALL directories for files,
   #only return relative path of files that match "gyro/<stuff>csv"
@@ -275,6 +278,8 @@ View(df)
 
 The `get_surveys_all` function combines all survey data for every individual in a data folder. It also creates a Beiwe ID column and orders the data by time according to Beiwe ID and survey ID. The directory for the `parent_dir` argument the parent directory should be assigned as the data folder holding all of the individual data folders. However, the `id_position` argument allows you enter where in your file path to direct the function to get the Beiwe IDs from the names of the individual data folders. The `id_position` argument should equal the level of the parent folder of the individual data folders. For example, a file path such as `Users/projects/beiwe-data/<beiwe-data-folders>`, the `id_position` argument should equal 5.
 
+Note that this function converts the `answer` vector to a character type. This will make the data type uniform to combine all rows. This means that after the survey data is further processed (e.g., pulling certain surveys out or converting to wide format), you will need to change the data type accordingly.   
+
 ```R
 # Notes:
   # The last two lines rearrange the data to be sequential via `UTC time` by participant and survey ID.
@@ -292,10 +297,12 @@ get_surveys_all <- function(parent_dir, id_position, match_string = "survey_timi
   all_files %>%
     map_df(~{
       read_delim(.x, delim = ",")  %>%
+        mutate(answers = as.character(answers) %>%
         mutate(beiweID = str_split(.x, pattern = "/", simplify = TRUE)[id_position]) # id_position = level of directory with BeiweID
     })  %>%
     group_by(beiweID, `survey id`) %>% # group by Beiwe ID and survey ID
-    arrange(`UTC time`) # arranges data by time for each participant
+    arrange(`UTC time`) %>% # arranges data by time for each participant
+    arrange(beiweID)
 }
 ```
 
@@ -387,6 +394,10 @@ library(lubridate)
 **iOS Survey Data**
 
 ```R
+# Filter out all instances of changed text entries. This should be all you need. 
+surveys_df <- survesy_df %>%
+  filter(!(event == "changed"))
+
 # Filter out the questions that correspond with "changed" in the `event` vector
 surveys_df <- surveys_df %>%
   filter(!(`question text` == "<question text>" & event == "changed" ))
@@ -413,4 +424,9 @@ surveys_df <- surveys_df %>%
   mutate(dups = ifelse(
     seconds - lag(seconds, 1) < abs(1),
     "duplicate", NA))
+
+# Filter out rows with duplicates, keep "User hit submit" row to keep things clean. 
+surveys_df %>%
+  filter(is.na(dups) | `question id` == "User hit submit")
+
 ```
