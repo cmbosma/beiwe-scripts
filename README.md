@@ -394,6 +394,10 @@ library(lubridate)
 **iOS Survey Data**
 
 ```R
+# Filter out all instances of changed text entries. This should be all you need. 
+surveys_df <- survesy_df %>%
+  filter(!(event == "changed"))
+
 # Filter out the questions that correspond with "changed" in the `event` vector
 surveys_df <- surveys_df %>%
   filter(!(`question text` == "<question text>" & event == "changed" ))
