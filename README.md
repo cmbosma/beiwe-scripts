@@ -420,4 +420,9 @@ surveys_df <- surveys_df %>%
   mutate(dups = ifelse(
     seconds - lag(seconds, 1) < abs(1),
     "duplicate", NA))
+
+# Filter out rows with duplicates, keep "User hit submit" row to keep things clean. 
+surveys_df %>%
+  filter(is.na(dups) | `question id` == "User hit submit")
+
 ```
