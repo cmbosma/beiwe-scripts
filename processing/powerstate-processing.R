@@ -67,7 +67,7 @@ get_power_state_all <- function(parent_dir, id_position, match_string = "power_s
   #adds beiweID as new column extracted from the input file.
   all_files %>%
     map_df(~{
-      read_delim(.x, delim = ",")  %>%
+      read_delim(.x, delim = ",", na = "")  %>%
         mutate(beiweID = str_split(.x, pattern = "/", simplify = TRUE)[id_position]) # id_position = level of directory with BeiweID
     })
 }

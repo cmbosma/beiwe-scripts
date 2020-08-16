@@ -27,6 +27,10 @@ library(lubridate)
     # To isolate just the open-ended, text response items, we want to also only include those questions
 
 surveys_df <- surveys_df %>%
+  filter(!(event == "changed"))
+
+# Specify by open-ended question 
+surveys_df <- surveys_df %>%
   filter(!(`question text` == "<question text>" & event == "changed" ))
 
 # Test tidying iOS surveys
